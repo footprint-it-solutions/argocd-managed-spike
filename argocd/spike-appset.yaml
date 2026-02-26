@@ -4,22 +4,23 @@ metadata:
   name: footprint-spike-appset
   namespace: argocd
 spec:
+  goTemplate: true # <--- ADD THIS LINE
   generators:
-    - clusters: {} # Automatically targets your local EKS cluster
+    - clusters: {} 
   template:
     metadata:
-      name: 'spike-nginx-{{index .metadata.labels "cluster-name"}}'
+      # We'll use "name" here just in case the label is missing on the local cluster
+      name: 'spike-nginx-{{ .name }}' 
     spec:
       project: default
       source:
         repoURL: https://github.com/footprint-it-solutions/argocd-managed-spike
         targetRevision: HEAD
         path: argocd/applications/spike-test
-        # Using a simple Bitnami NGINX chart for the spike
         helm:
           releaseName: spike-nginx
       destination:
-        server: '{{.server}}'
+        server: '{{ .server }}'
         namespace: spike-test-ns
       syncPolicy:
         automated:
