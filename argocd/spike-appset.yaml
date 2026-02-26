@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: footprint-spike-appset
+  namespace: argocd
+spec:
+  generators:
+    - clusters: {} # Automatically targets your local EKS cluster
+  template:
+    metadata:
+      name: 'spike-nginx-{{index .metadata.labels "cluster-name"}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/footprint-it-solutions/argocd-managed-spike
+        targetRevision: HEAD
+        path: argocd/applications/spike-test
+        # Using a simple Bitnami NGINX chart for the spike
+        helm:
+          releaseName: spike-nginx
+      destination:
+        server: '{{.server}}'
+        namespace: spike-test-ns
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

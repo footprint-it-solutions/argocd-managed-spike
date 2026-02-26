@@ -1,0 +1,4 @@
+.terraform/
+kubectl
+.terraform.lock.hcl
+*.tfstate*
