@@ -19,9 +19,9 @@ spec:
         path: argocd/applications/spike-test
         helm:
           releaseName: spike-nginx
-      destination:
-        server: '{{ .server }}'
-        namespace: spike-test-ns
+     destination:
+  name: in-cluster  # Use the name 'in-cluster' instead of the server URL
+  namespace: spike-test-ns
       syncPolicy:
         automated:
           prune: true
