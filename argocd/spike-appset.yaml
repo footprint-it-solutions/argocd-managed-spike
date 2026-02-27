@@ -1,27 +1,29 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: footprint-spike-appset
+  name: spike-test-app
   namespace: argocd
 spec:
-  goTemplate: true # <--- ADD THIS LINE
   generators:
     - clusters: {} 
+  goTemplate: true
   template:
     metadata:
-      # We'll use "name" here just in case the label is missing on the local cluster
-      name: 'spike-nginx-{{ .name }}' 
+      # Changed from 'cluster-name' label to the built-in '.name' 
+      # This will result in: spike-test-in-cluster
+      name: 'spike-test-{{ .name }}'
     spec:
       project: default
       source:
-        repoURL: https://github.com/footprint-it-solutions/argocd-managed-spike
-        targetRevision: HEAD
-        path: argocd/applications/spike-test
+        repoURL: https://charts.bitnami.com/bitnami
+        chart: nginx
+        # Update this to 18.2.1 or simply use 18.x
+        targetRevision: 18.2.1 
         helm:
-          releaseName: spike-nginx
-     destination:
-  name: in-cluster  # Use the name 'in-cluster' instead of the server URL
-  namespace: spike-test-ns
+          releaseName: spike-test
+      destination:
+        namespace: spike-test-ns
+        server: '{{ .server }}'
       syncPolicy:
         automated:
           prune: true
