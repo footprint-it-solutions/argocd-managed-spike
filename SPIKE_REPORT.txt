@@ -1,0 +1,7 @@
+EKS ArgoCD Capability Spike - Final Report
+------------------------------------------
+Status: Complete
+Finding: Validated ApplicationSet logic for multi-cluster deployments.
+Blocker identified: t3.small instances hit AWS VPC CNI limits (IP allocation), causing ArgoCD UI and pod scheduling failures.
+Recommendation: Standardize on t3.medium or larger for management clusters.
+Next Step: Create "ArgoCD NGINX Implementation" card in the backlog.
